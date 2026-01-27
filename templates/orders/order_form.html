@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">Create New Order</div>
+    <div class="card-body">
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="customer" class="form-label">Customer</label>
+                <select name="customer" id="customer" class="form-select" required>
+                    <option value="">Select Customer</option>
+                    {% for customer in customers %}
+                    <option value="{{ customer.id }}">{{ customer.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <h5>Products</h5>
+            <table class="table" id="product_table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="product_rows">
+                    <tr>
+                        <td>
+                            <select name="product_id[]" class="form-select" required>
+                                <option value="">Select Product</option>
+                                {% for product in products %}
+                                <option value="{{ product.id }}">{{ product.name }} (${{ product.price }} - Stock: {{ product.stock }})</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="quantity[]" class="form-control" min="1" required>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm remove-row">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-success btn-sm mb-3" id="add_row">Add Product</button>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Create Order</button>
+                <a href="{% url 'order_list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('add_row').addEventListener('click', function() {
+        var table = document.getElementById('product_rows');
+        var row = table.rows[0].cloneNode(true);
+        // Clear values
+        row.querySelector('select').value = "";
+        row.querySelector('input').value = "";
+        table.appendChild(row);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-row')) {
+            var rows = document.getElementById('product_rows').rows.length;
+            if (rows > 1) {
+                e.target.closest('tr').remove();
+            } else {
+                alert("At least one product is required.");
+            }
+        }
+    });
+</script>
+{% endblock %}

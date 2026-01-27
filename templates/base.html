@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mini Biz Mgmt - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .sidebar {
+          min-height: 100vh;
+          box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+      }
+      .sidebar .nav-link {
+          color: #333;
+          font-weight: 500;
+      }
+      .sidebar .nav-link.active {
+          color: #0d6efd;
+      }
+      .sidebar .nav-link:hover {
+          background-color: #f8f9fa;
+      }
+      /* Dark mode overrides */
+      [data-bs-theme="dark"] .sidebar {
+          background-color: #212529 !important; /* bg-dark */
+          box-shadow: inset -1px 0 0 rgba(255, 255, 255, .1);
+      }
+      [data-bs-theme="dark"] .sidebar .nav-link {
+          color: #adb5bd;
+      }
+      [data-bs-theme="dark"] .sidebar .nav-link:hover {
+          background-color: #2c3034;
+          color: #fff;
+      }
+      [data-bs-theme="dark"] .sidebar .nav-link.active {
+          color: #0d6efd;
+      }
+      [data-bs-theme="dark"] .sidebar .link-dark {
+          color: #fff !important;
+      }
+      [data-bs-theme="dark"] #sidebarMenu {
+          background-color: #212529 !important;
+      }
+      /* Sidebar Overlay Transition */
+      #sidebarMenu {
+          transition: margin 0.25s ease-out;
+      }
+      /* Toggled State */
+      .sidebar-closed #sidebarMenu {
+          display: none !important;
+      }
+      .sidebar-closed main {
+          width: 100% !important;
+          max-width: 100% !important;
+          flex: 0 0 100% !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+        <div class="row" id="mainRow">
+            <!-- Sidebar -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none px-3" href="{% url 'dashboard' %}">
+                        <span class="fs-4 fw-bold">MiniBiz</span>
+                    </a>
+                    <hr>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'customer' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'customer_list' %}">Customers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'product' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'product_list' %}">Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'order' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'order_list' %}">Orders</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content Area -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!-- Top Header (User Profile) -->
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-secondary btn-sm me-3" id="sidebarToggle">
+                            <span class="fs-6">☰</span>
+                        </button>
+                        <h1 class="h2 mb-0">{% block title %}Dashboard{% endblock %}</h1>
+                    </div>
+                    
+                    <div class="btn-toolbar mb-2 mb-md-0 align-items-center">
+                        <!-- Theme Toggle -->
+                        <div class="dropdown me-3">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="bd-theme" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
+                                <span class="theme-icon-active">🌓</span> Theme
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme">
+                                <li>
+                                    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+                                        ☀️ Light
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
+                                        🌙 Dark
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto">
+                                        🌓 Auto
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ user.username }}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                                <li>
+                                    <form method="post" action="{% url 'logout' %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item">Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Content -->
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.body.classList.toggle('sidebar-closed');
+        });
+        
+        (() => {
+            'use strict'
+            const getStoredTheme = () => localStorage.getItem('theme')
+            const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+            const getPreferredTheme = () => {
+                const storedTheme = getStoredTheme()
+                if (storedTheme) {
+                    return storedTheme
+                }
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+            }
+
+            const setTheme = theme => {
+                if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.setAttribute('data-bs-theme', 'dark')
+                } else {
+                    document.documentElement.setAttribute('data-bs-theme', theme)
+                }
+            }
+
+            setTheme(getPreferredTheme())
+
+            const showActiveTheme = (theme, focus = false) => {
+               // Optional: Update icon logic here
+            }
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                const storedTheme = getStoredTheme()
+                if (storedTheme !== 'light' && storedTheme !== 'dark') {
+                    setTheme(getPreferredTheme())
+                }
+            })
+
+            window.addEventListener('DOMContentLoaded', () => {
+                showActiveTheme(getPreferredTheme())
+
+                document.querySelectorAll('[data-bs-theme-value]').forEach(toggle => {
+                    toggle.addEventListener('click', () => {
+                        const theme = toggle.getAttribute('data-bs-theme-value')
+                        setStoredTheme(theme)
+                        setTheme(theme)
+                        showActiveTheme(theme, true)
+                    })
+                })
+            })
+        })()
+    </script>
+  </body>
+</html>

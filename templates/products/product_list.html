@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-3 align-items-center">
+    <div class="col-md-6">
+        <h2>Products</h2>
+    </div>
+    <div class="col-md-6">
+        <div class="d-flex justify-content-end gap-2">
+            <form method="get" class="d-flex" style="max-width: 300px;">
+                <input type="text" name="q" class="form-control form-control-sm me-2" placeholder="Search product..." value="{{ query }}">
+                <button type="submit" class="btn btn-sm btn-outline-primary">Search</button>
+            </form>
+            <a href="{% url 'product_add' %}" class="btn btn-sm btn-primary d-flex align-items-center">Add Product</a>
+        </div>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>${{ product.price }}</td>
+            <td>{{ product.stock }}</td>
+            <td>
+                <a href="{% url 'product_edit' product.pk %}" class="btn btn-sm btn-info">Edit</a>
+                <a href="{% url 'product_delete' product.pk %}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center">No products found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination -->
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-end">
+    {% if products.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page=1&q={{ query }}">&laquo; First</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}&q={{ query }}">Previous</a></li>
+    {% endif %}
+
+    <li class="page-item disabled"><span class="page-link">Page {{ products.number }} of {{ products.paginator.num_pages }}</span></li>
+
+    {% if products.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}&q={{ query }}">Next</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ products.paginator.num_pages }}&q={{ query }}">Last &raquo;</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}
