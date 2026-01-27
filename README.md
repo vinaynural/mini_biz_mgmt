@@ -21,7 +21,7 @@ A simple business management system built with Django.
 1. **Clone the repository:**
 
    ```bash
-   git clone <repo_url>
+   git clone https://github.com/vinaynural/mini_biz_mgmt.git
    cd mini_biz_mgmt
    ```
 
