@@ -4,6 +4,8 @@ from .models import Product
 from django.db.models import Q
 from django.core.paginator import Paginator
 
+from django.contrib import messages
+
 @login_required
 def product_list(request):
     query = request.GET.get('q', '')
@@ -28,6 +30,7 @@ def product_add(request):
         stock = request.POST.get('stock')
         
         Product.objects.create(name=name, price=price, stock=stock)
+        messages.success(request, 'Product added successfully.')
         return redirect('product_list')
     
     return render(request, 'products/product_form.html', {'action': 'Add'})
@@ -40,6 +43,7 @@ def product_edit(request, pk):
         product.price = request.POST.get('price')
         product.stock = request.POST.get('stock')
         product.save()
+        messages.success(request, 'Product updated successfully.')
         return redirect('product_list')
     
     return render(request, 'products/product_form.html', {'product': product, 'action': 'Edit'})
@@ -49,5 +53,6 @@ def product_delete(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if request.method == 'POST':
         product.delete()
+        messages.success(request, 'Product deleted successfully.')
         return redirect('product_list')
     return render(request, 'products/product_confirm_delete.html', {'product': product})

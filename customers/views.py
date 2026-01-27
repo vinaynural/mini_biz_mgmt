@@ -4,6 +4,8 @@ from .models import Customer
 from django.db.models import Q
 from django.core.paginator import Paginator
 
+from django.contrib import messages
+
 @login_required
 def customer_list(request):
     query = request.GET.get('q', '')
@@ -30,6 +32,7 @@ def customer_add(request):
         email = request.POST.get('email')
         
         Customer.objects.create(name=name, phone=phone, email=email)
+        messages.success(request, 'Customer created successfully.')
         return redirect('customer_list')
     
     return render(request, 'customers/customer_form.html', {'action': 'Add'})
@@ -42,6 +45,7 @@ def customer_edit(request, pk):
         customer.phone = request.POST.get('phone')
         customer.email = request.POST.get('email')
         customer.save()
+        messages.success(request, 'Customer updated successfully.')
         return redirect('customer_list')
     
     return render(request, 'customers/customer_form.html', {'customer': customer, 'action': 'Edit'})
@@ -51,5 +55,6 @@ def customer_delete(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
     if request.method == 'POST':
         customer.delete()
+        messages.success(request, 'Customer deleted successfully.')
         return redirect('customer_list')
     return render(request, 'customers/customer_confirm_delete.html', {'customer': customer})

@@ -11,6 +11,8 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 
+from django.contrib import messages
+
 @login_required
 def order_list(request):
     query = request.GET.get('q', '')
@@ -69,6 +71,7 @@ def order_create(request):
                 order.total_amount = total_amount
                 order.save()
                 
+            messages.success(request, 'Order created successfully.')
             return redirect('order_list')
         except ValueError as e:
             # Handle error (basic handling for now)
