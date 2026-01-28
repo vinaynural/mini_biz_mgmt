@@ -80,26 +80,22 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-if os.environ.get('RENDER'):
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.parse(
-            'postgresql://mini_biz_mgmt_user:SNxel8NBTMVgCFvbwW6XuoKPMXWkuEnm@dpg-d5so8arlr7ts73e7a110-a/mini_biz_mgmt',
-            conn_max_age=600
-        )
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+import dj_database_url
 
-print(f"DEBUG: Active Database Engine: {DATABASES['default']['ENGINE']}")
-if 'NAME' in DATABASES['default']:
-    print(f"DEBUG: Active Database Name: {DATABASES['default']['NAME']}")
-print(f"DEBUG: RENDER in os.environ: {'RENDER' in os.environ}")
+DATABASES = {
+    'default': dj_database_url.parse(
+        'postgresql://mini_biz_mgmt_user:SNxel8NBTMVgCFvbwW6XuoKPMXWkuEnm@dpg-d5so8arlr7ts73e7a110-a/mini_biz_mgmt',
+        conn_max_age=600
+    )
+}
+
+# SQLite (Local Development) - Uncomment to use locally
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
