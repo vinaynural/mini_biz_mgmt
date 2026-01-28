@@ -96,6 +96,10 @@ else:
         }
     }
 
+print(f"DEBUG: Active Database Engine: {DATABASES['default']['ENGINE']}")
+if 'NAME' in DATABASES['default']:
+    print(f"DEBUG: Active Database Name: {DATABASES['default']['NAME']}")
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
