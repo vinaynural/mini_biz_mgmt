@@ -77,12 +77,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-import dj_database_url
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 if os.environ.get('RENDER'):
+    import dj_database_url
     DATABASES = {
         'default': dj_database_url.parse(
             'postgresql://mini_biz_mgmt_user:SNxel8NBTMVgCFvbwW6XuoKPMXWkuEnm@dpg-d5so8arlr7ts73e7a110-a/mini_biz_mgmt',
