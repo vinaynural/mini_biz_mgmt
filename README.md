@@ -67,7 +67,7 @@ Displays a simple overview of business metrics:
 - **Advanced Reporting:** Monthly Sales Bar Chart & Top Selling Products Pie Chart (Chart.js).
 - **PDF Invoices:** Download order details as PDF files.
 - **Search & Pagination:** Efficiently manage long lists of customers/products.
-- **UI/UX:** Dark Mode toggle, Bootstrap 5 styling, and Toast Notifications for feedback.
+- **UI/UX:** Dark Mode toggle, Bootstrap 5 styling.
 
 ---
 
