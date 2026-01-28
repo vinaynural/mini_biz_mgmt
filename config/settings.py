@@ -99,6 +99,7 @@ else:
 print(f"DEBUG: Active Database Engine: {DATABASES['default']['ENGINE']}")
 if 'NAME' in DATABASES['default']:
     print(f"DEBUG: Active Database Name: {DATABASES['default']['NAME']}")
+print(f"DEBUG: RENDER in os.environ: {'RENDER' in os.environ}")
 
 
 # Password validation
